@@ -13,7 +13,11 @@ pipeline{
                 cleanWs()
             }
         }
-
+        stage('Checkout from Git'){
+            steps{
+                git branch: 'feature', url: 'https://github.com/EAAZZYY/Netflix-clone-E2E-project.git'
+            }
+        }
         stage("Sonarqube Analysis"){
             steps{
                 withSonarQubeEnv('sonar-server') {
@@ -43,7 +47,7 @@ pipeline{
             body: "Project: ${env.JOB_NAME}<br/>" +
                 "Build Number: ${env.BUILD_NUMBER}<br/>" +
                 "URL: ${env.BUILD_URL}<br/>",
-            to: '<your-mail-id>',
+            to: 'tobiropo@gmail.com',
             attachmentsPattern: 'trivyfs.txt,trivyimage.txt'
         }
     }
