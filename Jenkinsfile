@@ -13,12 +13,16 @@ pipeline{
                 cleanWs()
             }
         }
+        stage('Checkout from Git'){
+            steps{
+                git branch: 'master', url: 'https://github.com/EAAZZYY/Netflix-clone-E2E-project.git'
+            }
+        }
         stage("Sonarqube Analysis"){
             steps{
                 withSonarQubeEnv('sonar-server') {
                     sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Netflix \
                     -Dsonar.projectKey=Netflix \
-                    -Dsonar.sources=. \
                     '''
                 }
             }
@@ -34,7 +38,7 @@ pipeline{
             steps {
                 sh "npm install"
             }
-        }
+        }  
     }
     post {
      always {
@@ -43,7 +47,7 @@ pipeline{
             body: "Project: ${env.JOB_NAME}<br/>" +
                 "Build Number: ${env.BUILD_NUMBER}<br/>" +
                 "URL: ${env.BUILD_URL}<br/>",
-            to: 'tobiropo@gmail.com',
+            to: '<your-mail-id>',
             attachmentsPattern: 'trivyfs.txt,trivyimage.txt'
         }
     }
