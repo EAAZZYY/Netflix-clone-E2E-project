@@ -38,8 +38,22 @@ pipeline{
             steps {
                 sh "npm install"
             }
-        }  
+        } 
+
+        stage('OWASP DP SCAN') {
+            steps {
+                dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'owasp'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+        stage('TRIVY FS SCAN') {
+            steps {
+                sh "trivy fs . > trivyfs.txt"
+            }
+        } 
     }
+    
+    
     post {
      always {
         emailext attachLog: true,
