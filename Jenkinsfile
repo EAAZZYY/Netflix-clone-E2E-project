@@ -5,7 +5,7 @@ pipeline{
         nodejs 'nodejs'
     }
     environment {
-        SCANNER_HOME=tool 'sonar-server'
+        SCANNER_HOME=tool 'sonar-scanner'
     }
     stages {
         stage('Workspace Cleaning'){
