@@ -71,6 +71,22 @@ pipeline{
                 sh "trivy image eaazzyy/netflix:latest > trivyimage.txt"
             }
         }
+        stage('Deploy to Kubernetes'){
+            steps{
+                script{
+                    dir('Kubernetes') {
+                        withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'kube_config', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+                                sh 'kubectl apply -f deployment.yml'
+                                sh 'kubectl apply -f service.yml'
+                                sh 'kubectl get deployment'
+                                sh 'kubectl get svc'
+                                sh 'kubectl get pods'
+                                sh 'kubectl get nodes'
+                        }   
+                    }
+                }
+            }
+        }
  
     }
     
