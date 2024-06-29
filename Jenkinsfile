@@ -50,7 +50,34 @@ pipeline{
             steps {
                 sh "trivy fs . > trivyfs.txt"
             }
-        } 
+        }
+        stage("Docker Image Build"){
+            steps{
+                script{
+                   withDockerRegistry(credentialsId: 'dockerhub', toolName: 'docker'){   
+                       sh "docker system prune -f"
+                       sh "docker container prune -f"
+                       sh "docker build --build-arg TMDB_V3_API_KEY=1a3d8186607df2b6f47ddf8ca8111c6e -t netflix ."
+                    }
+                }
+            }
+        }
+        stage("Docker Image Pushing"){
+            steps{
+                script{
+                   withDockerRegistry(credentialsId: 'dockerhub', toolName: 'docker'){   
+                       sh "docker tag netflix eaazzyy/netflix:latest "
+                       sh "docker push eaazzyy/netflix:latest "
+                    }
+                }
+            }
+        }
+        stage("TRIVY Image Scan"){
+            steps{
+                sh "trivy image eaazzyy/netflix:latest > trivyimage.txt"
+            }
+        }
+ 
     }
     
     
